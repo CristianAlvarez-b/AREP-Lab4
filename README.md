@@ -3,7 +3,7 @@
 
 ## Overview
 
-This project involves the development of a lightweight web server in Java that supports serving static HTML and PNG files. Additionally, it implements an IoC (Inversion of Control) framework to build web applications from POJOs. The server processes multiple non-concurrent requests and dynamically loads annotated components to expose RESTful endpoints.
+The workshop consists of creating a small web application using SPRING. Once we have this application, we will proceed to build a docker container for the application and deploy and configure it on our local machine. Then, we will create a repository on DockerHub and upload the image to the repository. Finally, we will create a virtual machine on AWS, install Docker , and deploy the container we just created.
 
 ## Getting Started
 
