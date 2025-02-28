@@ -23,29 +23,32 @@ To run this project, you must have Java installed on your system. Follow the ste
 3. **Install Docker**  
 ### Installing
 > [!NOTE]
-> You should perform the following steps from a Bash terminal or PowerShell on Windows. And previously start DockerDeskopt
+> You should perform the following steps from a Bash terminal or PowerShell on Windows. 
 
-o set up your development environment:
+> [!IMPORTANT]
+> Previously start DockerDesktop
+
+To set up your development environment:
 1. **Clone the repository:**
 ```bash
-   git clone https://github.com/CristianAlvarez-b/AREP-Lab4
+git clone https://github.com/CristianAlvarez-b/AREP-Lab4
 ```
 2. **Navigate to the project directory:**
 ```bash
-   cd AREP-Lab4
+cd AREP-Lab4
 ```
 3. **Build the project with Maven:**
 ```bash
-   mvn clean install
+mvn clean install
 ```
   This will compile the code and package it into an executable JAR file.
 4. **Create the image:**
 ```bash
-   docker build --tag dockereciboot .
+docker build --tag dockereciboot .
 ```
 5. **Create the docker instance:**
 ```bash
-    docker run -d -p 35000:6000 --name firstdockercontainer dockereciboot
+docker run -d -p 35000:6000 --name firstdockercontainer dockereciboot
 ```
 The application in this case will run on port 35000.
 
@@ -163,17 +166,27 @@ COPY /target/dependency /usrapp/bin/dependency
 CMD ["java","-cp","./classes:./dependency/*","co.edu.eci.arep.serverHttp.WebApplication"]
 ```
 - We create the image
+  
 ![img.png](src/main/resources/webroot/public/img/img3.png)
 
 - We create instances for the container
+  
 ![img_1.png](src/main/resources/webroot/public/img/img_1.png)
+
 - We verify the creation of the instances
+  
 ![img_2.png](src/main/resources/webroot/public/img/img_2.png)
+
 - We tested in the browser
+  
 ![img_3.png](src/main/resources/webroot/public/img/img_3.png)
+
 ![img_4.png](src/main/resources/webroot/public/img/img_4.png)
+
 ![img_5.png](src/main/resources/webroot/public/img/img_5.png)
+
 - Upload to docker hub
+  
 ![img_6.png](src/main/resources/webroot/public/img/img_6.png)
 ![img_7.png](src/main/resources/webroot/public/img/img_7.png)
 ![img_8.png](src/main/resources/webroot/public/img/img_8.png)
