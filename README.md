@@ -1,5 +1,5 @@
 # AREP-Lab4
-# Web Server with IoC Framework in Java
+# Workshop on modularization with virtualization and Introduction to Docker
 
 ## Overview
 
@@ -102,16 +102,42 @@ AREP-Lab4/
 
 ## Concurrency
 To implement concurrency, each incoming request spawns a new thread responsible for handling the request. This ensures that multiple requests can be processed simultaneously without blocking the main server loop.
-In the implementation below, when a client connection is accepted, a new thread is created to handle it asynchronously:
+
+Additionally, to ensure a graceful shutdown, a shutdown hook is registered. This hook listens for termination signals (such as CTRL + C or system shutdown events) and ensures that the server stops accepting new connections while closing active resources properly. This prevents abrupt disconnections and potential resource leaks.
+
+In the implementation below, when a client connection is accepted, a new thread is created to handle it asynchronously. The shutdown hook guarantees that the server shuts down cleanly when terminated:
 ```Java
 public static void start(String[] args) throws IOException {
-ServerSocket serverSocket = new ServerSocket(35000);
-EciBoot.loadComponents();
-System.out.println("Servidor iniciado en el puerto 35000...");
+        int port = getPort();
+        serverSocket = new ServerSocket(port);
+        EciBoot.loadComponents();
+        System.out.println("Servidor iniciado en el puerto " + port + "...");
 
-        while (true) {
-            Socket clientSocket = serverSocket.accept();
-            new Thread(() -> handleClient(clientSocket)).start();
+        // Hook de apagado elegante
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                System.out.println("Apagando servidor...");
+                running = false;
+                if (serverSocket != null && !serverSocket.isClosed()) {
+                    serverSocket.close();
+                }
+                System.out.println("Servidor apagado correctamente.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
+
+        while (running) {
+            try {
+                Socket clientSocket = serverSocket.accept();
+                new Thread(() -> handleClient(clientSocket)).start();
+            } catch (IOException e) {
+                if (!running) {
+                    System.out.println("Servidor detenido.");
+                } else {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 ```
@@ -154,18 +180,31 @@ CMD ["java","-cp","./classes:./dependency/*","co.edu.eci.arep.serverHttp.WebAppl
 
 ## AWS
 1. Access the virtual machine
+
 ![img_9.png](src/main/resources/webroot/public/img/img_9.png)
+
 2. Install Docker
+
 ![img_10.png](src/main/resources/webroot/public/img/img_10.png)
+
 3. Start the docker service
+
 ![img_11.png](src/main/resources/webroot/public/img/img_11.png)
+
 4. Set your user in the docker group so you don't have to enter “sudo” every time you invoke a command
+
 ![img_12.png](src/main/resources/webroot/public/img/img_12.png)
+
 5. From the image created in Dockerhub create an instance of a docker container independent of the console (“-d” option) and with port 6000 bound to a physical port on your machine (-p option):
+
 ![img_13.png](src/main/resources/webroot/public/img/img_13.png)
+
 6. Open the virtual maximum security group inbound ports to access the service
+
 ![img_14.png](src/main/resources/webroot/public/img/img_14.png)
+
 7. Check service
+
 ![img_15.png](src/main/resources/webroot/public/img/img_15.png)
 ![img_16.png](src/main/resources/webroot/public/img/img_16.png)
 
@@ -186,6 +225,11 @@ Automated tests are included to ensure the server and web application functional
 ![img.png](src/main/resources/webroot/public/img/img2.png)
 
 ### Funcional Test
+
+The following video shows the aws deployment:
+
+
+https://github.com/user-attachments/assets/08bb3e75-8df3-4ab8-9b93-9e3c79ab28b7
 
 
 ### Built with
